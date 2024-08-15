@@ -1,7 +1,8 @@
 from app import *
 class LoginView(QWidget):
-    is_connected = pyqtSignal(list)
-    camera_essential_data = pyqtSignal(dict)
+    is_just_offline_view_changed = pyqtSignal(bool)
+    is_connected_changed = pyqtSignal(list)
+    camera_essential_data_changed = pyqtSignal(dict)
     def __init__(self, login_model, login_controller):
         super(LoginView, self).__init__()
         self._fps_list = []
@@ -21,6 +22,10 @@ class LoginView(QWidget):
         widgets_height_pos = (AVAILABLE_HEIGHT // 2) + (AVAILABLE_HEIGHT // 4)
         widgets_width = AVAILABLE_WIDTH // 5
         widgets_height = AVAILABLE_HEIGHT // 20
+        self.pushButton_offline_mode = QPushButton(self.frame)
+        self.pushButton_offline_mode.setGeometry(QRect(widgets_width_pos, widgets_height_pos - 24*(widgets_height - widgets_height//2), widgets_width, widgets_height))
+        self.pushButton_offline_mode.setObjectName("pushButton_offline_mode")
+        self.pushButton_offline_mode.clicked.connect(self.mainViewOfflineMode)
         self.labelMsg = QLabel(self.frame)
         self.labelMsg.setGeometry(QRect(widgets_width_pos, widgets_height_pos - 21*(widgets_height - widgets_height//2) , widgets_width, widgets_height))
         self.comboBox_type = QComboBox(self.frame)
@@ -54,6 +59,7 @@ class LoginView(QWidget):
     def retranslateUi(self, Form):
         _translate = QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Login to Camera"))
+        self.pushButton_offline_mode.setText(_translate("Form", "Offline Mode"))
         self.pushButton_submit.setText(_translate("Form", "SUBMIT"))
         self.lineEdit_ip.setPlaceholderText(_translate("Form", "IP Address: 192.168.x.x"))
         self.lineEdit_user.setPlaceholderText(_translate("Form", "Username: root"))
@@ -79,6 +85,8 @@ class LoginView(QWidget):
         self.comboBox_type.setParent(None)
         self.comboBox_brand.setParent(None)
         self.pushButton_submit.setParent(None)
+        self.pushButton_offline_mode.setParent(None)
+        self.labelMsg.setParent(None)
         self.lineEdit_ip.setParent(None)
         self.lineEdit_user.setParent(None)
         self.lineEdit_password.setParent(None)
@@ -112,14 +120,14 @@ class LoginView(QWidget):
                 'connection_test': True,
                 'type_brand_streams': ['ip', 'axis', 4]
                  }
-        self.camera_essential_data.emit(self._camera_essential_data)
+        self.camera_essential_data_changed.emit(self._camera_essential_data)
         self._camera_manager = LiveStreamingManager(data=self._camera_essential_data)
         self._camera_manager.start()
         self._camera_manager.is_connected_changed.connect(self.on_is_connected)
     @pyqtSlot(list)
     def on_is_connected(self, data):
         if len(data) > 0:
-            self.is_connected.emit(data)
+            self.is_connected_changed.emit(data)
     def waiting_in_login(self):
         self.lineEdit_user.setEnabled(False)
         self.lineEdit_password.setEnabled(False)
@@ -137,6 +145,8 @@ class LoginView(QWidget):
         self.lineEdit_ip.setText("")
         self.pushButton_submit.setEnabled(True)
         self.labelMsg.setText("Something went wrong, try again")
+    def mainViewOfflineMode(self):
+        self.is_just_offline_view_changed.emit(True)
 
 
 

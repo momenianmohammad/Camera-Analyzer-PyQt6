@@ -29,7 +29,6 @@ class IAndPFrameWDRUI(QWidget):
         self.btnHist = QPushButton(self.verticalLayoutWidget)
         self.btnHist.setObjectName("btnHist")
         self.btnHist.setVisible(False)
-        self.btnHist.clicked.connect(self.histoViewer)
         self.lblWdr = QLabel(self.verticalLayoutWidget)
         self.lblWdr.setObjectName("lblWdr")
         self.lblWdr.setVisible(False)

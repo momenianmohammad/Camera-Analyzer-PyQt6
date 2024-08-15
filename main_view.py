@@ -17,15 +17,20 @@ class MainView(QMainWindow):
         login_controller = LoginController(login_model)
         self._ui_login = LoginView(login_model, login_controller)
         self.flag_clicked_on_ui_i_and_p_frames_wdr_grid = False
-    def startMainWindow(self):
+        self.flag_clicked_on_is_just_offline_mode = False
+    def startMainWindow(self,is_offline =  False):
         self._ui.setupUi(self)
         self.disableMenu(disable=False)
-        self._ui.action_1_Stream.triggered.connect(self.action_1_Stream_Click)
-        self._ui.action_2_Streams.triggered.connect(self.action_2_Streams_Click)
-        self._ui.action_3_Streams.triggered.connect(self.action_3_Streams_Click)
-        self._ui.action_Histogram_Contrast.triggered.connect(self.action_Histogram_Contrast_Click)
-        self._ui.actionDead_Pixels_Detector.triggered.connect(self.action_Dead_Pixels_Detector_Click)
-        self._ui.actionAttach_a_Video.triggered.connect(self.action_Attach_a_Video_Click)
+        if is_offline:
+            self._ui.actionAttach_a_Video.triggered.connect(self.action_Attach_a_Video_Click)
+        else:
+            self._ui.action_1_Stream.triggered.connect(self.action_1_Stream_Click)
+            self._ui.action_2_Streams.triggered.connect(self.action_2_Streams_Click)
+            self._ui.action_3_Streams.triggered.connect(self.action_3_Streams_Click)
+            self._ui.action_Histogram_Contrast.triggered.connect(self.action_Histogram_Contrast_Click)
+            self._ui.actionDead_Pixels_Detector.triggered.connect(self.action_Dead_Pixels_Detector_Click)
+            self._ui.actionAttach_a_Video.triggered.connect(self.action_Attach_a_Video_Click)
+
     def startLoginWindow(self):
         self._ui_login.setupUi(self)
         self.threadingLogin()
@@ -40,8 +45,11 @@ class MainView(QMainWindow):
         self._ui_i_and_p_frames_wdr_grid.setupUi(self)
         self._ui_i_and_p_frames_wdr_grid.enable_menu_changed.connect(self.on_enable_menu)        
     def threadingLogin(self):
-        self._ui_login.is_connected.connect(self.on_is_connected)
-        self._ui_login.camera_essential_data.connect(self.on_camera_essential_data)
+        self._ui_login.is_connected_changed.connect(self.on_is_connected)
+        self._ui_login.camera_essential_data_changed.connect(self.on_camera_essential_data)
+        self._ui_login.is_just_offline_view_changed.connect(self.on_is_just_offline_view)
+
+        
     def disableMenu(self, disable = True):
         if disable:
             self._ui.menubar.setVisible(False)
@@ -51,6 +59,19 @@ class MainView(QMainWindow):
             self._ui.menubar.setVisible(True)
             self._ui.menubar.setHidden(False)
             self._ui.menubar.setEnabled(True)
+    
+    @pyqtSlot(bool)
+    def on_is_just_offline_view(self, value):
+        if value == True:
+            self.flag_clicked_on_is_just_offline_mode = True
+            self._ui_login.deleteLoginLayout()
+            self.startMainWindow(is_offline = True)
+            self._ui.menuLive_Streaming.setHidden(True)
+            self._ui.menuLive_Streaming.setVisible(False)
+            self._ui.menuLive_Streaming.setEnabled(False)
+            self.disableMenu(False)
+        else:
+            self.disableMenu(True)
     @pyqtSlot(bool)
     def on_enable_menu(self, value):
         if value == True:
@@ -64,7 +85,10 @@ class MainView(QMainWindow):
                 self._ui_live_streaming_grid.deleteGridView()
                 self._ui_i_and_p_frames_wdr_grid.deleteIAndPAndWdrView()
         else: 
-            self._ui_live_streaming_grid.deleteGridView()
+            if self.flag_clicked_on_is_just_offline_mode == False:
+                self._ui_live_streaming_grid.deleteGridView()
+            else:
+                return
     def openIAndPFramesWDRGridWindow(self):
         files_limit = 'Videos (*.avi *.mp4)'
         fileName = QFileDialog.getOpenFileName(self, 'OpenFile', WORK_SPACE_DIR, files_limit)

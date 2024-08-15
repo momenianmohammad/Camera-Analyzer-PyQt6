@@ -126,6 +126,7 @@ class IAndPFrameWDRGridView(QWidget):
                         self.saveButton(self._offline_ui.btnFullsc)
                         self.saveLayout(self._offline_ui, "ou")
                         self._offline_ui.btnFullsc.clicked.connect(self.swichFullScreen)
+                        self._offline_ui.btnHist.clicked.connect(self._offline_ui.histoViewer)
                         self._offline_ui.setMinimumSize(AVAILABLE_WIDTH // 4,AVAILABLE_HEIGHT // 4)
                         self.gridLayout.addWidget(self._offline_ui, i, j)
                         self.index_i_frame = self.index_i_frame + 1
@@ -143,6 +144,7 @@ class IAndPFrameWDRGridView(QWidget):
             if isinstance(current_item.widget(), QWidget):
                 current_item.widget().verticalLayoutWidget.setGeometry(QRect(0, 0, AVAILABLE_WIDTH, AVAILABLE_HEIGHT - AVAILABLE_HEIGHT // 3))
                 current_item.widget().lblWdr.setVisible(True)
+                current_item.widget().lblContrast.setVisible(True)
                 current_item.widget().lblContrast.setVisible(True)
                 current_item.widget().btnHist.setVisible(True)                
             for i in range(0, len(self.gridLayout)):
