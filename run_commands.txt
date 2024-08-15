@@ -1,0 +1,1 @@
+pyinstaller --onefile --noconsole -F -w -n cameraanalyzer .\app.py
