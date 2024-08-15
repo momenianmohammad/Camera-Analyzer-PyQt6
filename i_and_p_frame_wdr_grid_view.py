@@ -36,12 +36,15 @@ class IAndPFrameWDRGridView(QWidget):
         p = convert_to_Qt_format.scaled(160, 120, Qt.AspectRatioMode.KeepAspectRatio)
         return QPixmap.fromImage(p)
     @pyqtSlot(dict)
-    def on_basic_info_video(self, data):        
+    def on_basic_info_video(self, data):
+        if 'stop' in data:
+            self.enable_menu_changed.emit(True)
         if 'count_of_frames' in data and 'basic_info' in data:
             self.lblBasicError.setText("Do not close the App. Waiting to get basic information.")
             basic_info = data['basic_info']
             count_of_frames = data['count_of_frames']
             self.previous_basic_info_video = basic_info + " total frames: " + str(count_of_frames)
+
     @pyqtSlot(int, int)
     def on_count_of_frames(self, count_of_i_frames, count_of_p_frames):
         if count_of_i_frames > 0 and count_of_p_frames > 0:
@@ -50,9 +53,11 @@ class IAndPFrameWDRGridView(QWidget):
     @pyqtSlot(list)
     def on_frame_recieved(self, frames):
         for frame in frames:
-            self.i_frame_list.append(frame)
-            qt_img = self.convert_cv_qt(frame)
-            self.i_qt_img_list.append(qt_img)
+                frame = cv2.resize(frame,(320, 240), cv2.INTER_CUBIC)
+                self.i_frame_list.append(frame)
+                qt_img = self.convert_cv_qt(frame)
+                self.i_qt_img_list.append(qt_img)
+
         self.lblBasicError.setText("Basic info: "+ self.previous_basic_info_video + self.count_of_i_frames_str + self.count_of_p_frames_str)
         self.lblSaveFrames.setText("Waiting to save I and P frames")
     @pyqtSlot(str)

@@ -59,9 +59,9 @@ class IAndPFrameWDRUI(QWidget):
             frame = self._data['frame']
             color = ('b', 'g', 'r')
             for i,col in enumerate(color):
-                histr = cv2.calcHist([frame],[i],None,[256],[0,256])
+                histr = cv2.calcHist([frame],[i],None,[16],[0,16])
                 plt.plot(histr,color = col)
-                plt.xlim([0,256])
+                plt.xlim([0,16])
             self.canvas.draw()
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             contrast = gray.std()

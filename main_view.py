@@ -47,9 +47,7 @@ class MainView(QMainWindow):
     def threadingLogin(self):
         self._ui_login.is_connected_changed.connect(self.on_is_connected)
         self._ui_login.camera_essential_data_changed.connect(self.on_camera_essential_data)
-        self._ui_login.is_just_offline_view_changed.connect(self.on_is_just_offline_view)
-
-        
+        self._ui_login.is_just_offline_view_changed.connect(self.on_is_just_offline_view)  
     def disableMenu(self, disable = True):
         if disable:
             self._ui.menubar.setVisible(False)
@@ -93,8 +91,15 @@ class MainView(QMainWindow):
         files_limit = 'Videos (*.avi *.mp4)'
         fileName = QFileDialog.getOpenFileName(self, 'OpenFile', WORK_SPACE_DIR, files_limit)
         if fileName[0] != "":
+            # remove space from file name
+            path = fileName[0]
+            pattern = re.compile(r'\s+')
+            path_ = re.sub(pattern, '', path)
+            resList = list(itertools.filterfalse(lambda x: x == ' ', path_))
+            final = ''.join(resList)
+            os.rename(path, final)
             data = {
-                "path" : fileName[0]
+                "path" : final
             }
             self.startIAndPFramesWDRGridWindow(data=data)
             self.stopThreadingOnWindowChanged(delete_offline_view=False)

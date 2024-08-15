@@ -29,26 +29,42 @@ class IAndPFrameWDRManager(QThread):
                     self._path = data['path']
     def run(self):
         self.get_basic_info(self._path)
-        self.show_i_frames(self._path)
-        self.save_i_frames(self._path)
-        self.save_p_frames(self._path)
     def get_basic_info(self, path):
         command1 = 'ffprobe -v error -select_streams v:0 -count_packets -show_entries stream=nb_read_packets -of csv=p=0 '
-        frames_count = subprocess.check_output(command1 + path,shell=True).decode()
         command2 = 'ffprobe -v error -select_streams v:0 -show_entries stream=width,height,duration,bit_rate -of default=noprint_wrappers=1 '
-        basic_info = subprocess.check_output(command2 + path,shell=True).decode()
-        if (int(frames_count) > MIN_SHOW_FRAME and int(frames_count) < MAX_SHOW_FRAME):
-            basic_info  = basic_info.replace("\n", " , ")
-            data = {
-                "count_of_frames": int(frames_count),
-                "basic_info": basic_info,
-            }
-            self.basic_info_video_changed.emit(data)
+        try:
+            frames_count = subprocess.check_output(command1 + path,shell=True).decode()
+            basic_info = subprocess.check_output(command2 + path,shell=True).decode()
+            if (int(frames_count) > MIN_SHOW_FRAME and int(frames_count) < MAX_SHOW_FRAME):
+                basic_info  = basic_info.replace("\n", " , ")
+                data = {
+                    "count_of_frames": int(frames_count),
+                    "basic_info": basic_info,
+                }
+                self.basic_info_video_changed.emit(data)
+                self.show_i_frames(self._path)
+                self.save_i_frames(self._path)
+                self.save_p_frames(self._path)
+            else:
+                data = {
+                    'stop': True
+                }
+                self.basic_info_video_changed.emit(data)
+                self.stop()
+        except:
+                data = {
+                    'stop': True
+                }
+                self.basic_info_video_changed.emit(data)
+                self.stop()
     def get_frame_types(self,path):
         command = 'ffprobe -v error -show_entries frame=pict_type -of default=noprint_wrappers=1 '.split()
-        out = subprocess.check_output(command + [path],shell=True).decode()
-        frame_types = out.replace('pict_type=','').split()
-        return zip(range(len(frame_types)), frame_types)
+        try:
+            out = subprocess.check_output(command + [path],shell=True).decode()
+            frame_types = out.replace('pict_type=','').split()
+            return zip(range(len(frame_types)), frame_types)
+        except:
+            pass
     def show_i_frames(self,path):
         frame_types = self.get_frame_types(path)
         i_frames = [x[0] for x in frame_types if x[1]=='I']
@@ -86,7 +102,6 @@ class IAndPFrameWDRManager(QThread):
                 cv2.imwrite(dir_local_i_frames + outname, frame)
                 self.status_save_i_frames_changed.emit(str(index_show) + " from " + str(len(i_frames)))
                 index_show = index_show + 1
-
             self.cap.release()
             self.is_save_i_frames_changed.emit(True)
         else:

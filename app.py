@@ -1,5 +1,4 @@
-import sys,os,re,cv2,numpy as np,time,pyqtgraph as pg,subprocess,matplotlib.pyplot as plt
-import matplotlib.pyplot as plt
+import sys,os,re,cv2,numpy as np,time,pyqtgraph as pg,subprocess,matplotlib.pyplot as plt,itertools
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from datetime import datetime
 from PyQt6.QtGui import QFont,QAction,QImage,QPixmap,QPixmapCache
@@ -22,6 +21,7 @@ I_AND_P_FRAMES_DIR = WORK_SPACE_DIR + "I-AND-P-FRAMES/"
 ENABLE_MENU_DELAY = 20
 MIN_SHOW_FRAME = 200
 MAX_SHOW_FRAME = MIN_SHOW_FRAME * 10
+RESCALE_SIZE_FOR_WDR = 4
 APP_NAME = "IROST Camera Analyzer"
 custom_font = QFont("Calibri", 14)
 app.setFont(custom_font, "QLabel")
