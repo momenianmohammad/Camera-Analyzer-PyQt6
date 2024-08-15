@@ -15,6 +15,7 @@ class IAndPFrameWDRManager(QThread):
             self.initializeValues()
             self.assistant(data)
     def initializeValues(self):
+        self.cap = cv2.VideoCapture()
         self._isRunning = True
         self._path = ''
         self._count_of_i_frames = 0
@@ -33,9 +34,9 @@ class IAndPFrameWDRManager(QThread):
         self.save_p_frames(self._path)
     def get_basic_info(self, path):
         command1 = 'ffprobe -v error -select_streams v:0 -count_packets -show_entries stream=nb_read_packets -of csv=p=0 '
-        frames_count = subprocess.check_output(command1 + path).decode()
+        frames_count = subprocess.check_output(command1 + path,shell=True).decode()
         command2 = 'ffprobe -v error -select_streams v:0 -show_entries stream=width,height,duration,bit_rate -of default=noprint_wrappers=1 '
-        basic_info = subprocess.check_output(command2 + path).decode()
+        basic_info = subprocess.check_output(command2 + path,shell=True).decode()
         if (int(frames_count) > MIN_SHOW_FRAME and int(frames_count) < MAX_SHOW_FRAME):
             basic_info  = basic_info.replace("\n", " , ")
             data = {
@@ -45,7 +46,7 @@ class IAndPFrameWDRManager(QThread):
             self.basic_info_video_changed.emit(data)
     def get_frame_types(self,path):
         command = 'ffprobe -v error -show_entries frame=pict_type -of default=noprint_wrappers=1 '.split()
-        out = subprocess.check_output(command + [path]).decode()
+        out = subprocess.check_output(command + [path],shell=True).decode()
         frame_types = out.replace('pict_type=','').split()
         return zip(range(len(frame_types)), frame_types)
     def show_i_frames(self,path):
@@ -67,52 +68,47 @@ class IAndPFrameWDRManager(QThread):
     def get_count_of_p_frames(self,path):
         frame_types = self.get_frame_types(path)
         p_frames = [x[0] for x in frame_types if x[1]=='P']
-        self.count_of_frames_changed.emit(self._count_of_i_frames, len(p_frames)) 
-    def get_frame_types_for_save(self, path):
-       command = 'ffprobe -v error -show_entries frame=pict_type -of default=noprint_wrappers=1 '.split()
-       out = subprocess.check_output(command + [path]).decode()
-       frame_types = out.replace('pict_type=','').split()
-       return zip(range(len(frame_types)), frame_types)   
+        self.count_of_frames_changed.emit(self._count_of_i_frames, len(p_frames))
     def save_i_frames(self,path):
-        frame_types = self.get_frame_types_for_save(path)
+        frame_types = self.get_frame_types(path)
         i_frames = [x[0] for x in frame_types if x[1]=='I']
         if i_frames:
             basename = os.path.splitext(os.path.basename(path))[0]
             dir_local_i_frames = I_AND_P_FRAMES_DIR + basename + "/I-FRAMES/"
             if not os.path.exists(dir_local_i_frames):
                 os.makedirs(dir_local_i_frames)
-            cap = cv2.VideoCapture(path)
+            self.cap.open(path,apiPreference=cv2.CAP_FFMPEG)
             index_show = 1
             for frame_no in i_frames:
-                cap.set(cv2.CAP_PROP_POS_FRAMES, frame_no)
-                frame = cap.read()[1]
+                self.cap.set(cv2.CAP_PROP_POS_FRAMES, frame_no)
+                frame = self.cap.read()[1]
                 outname = 'i_'+str(frame_no)+'.jpg'               
                 cv2.imwrite(dir_local_i_frames + outname, frame)
                 self.status_save_i_frames_changed.emit(str(index_show) + " from " + str(len(i_frames)))
                 index_show = index_show + 1
 
-            cap.release()
+            self.cap.release()
             self.is_save_i_frames_changed.emit(True)
         else:
             pass
     def save_p_frames(self,path):
-        frame_types = self.get_frame_types_for_save(path)
+        frame_types = self.get_frame_types(path)
         p_frames = [x[0] for x in frame_types if x[1]=='P']
         if p_frames:
             basename = os.path.splitext(os.path.basename(path))[0]
             dir_local_p_frames = I_AND_P_FRAMES_DIR + basename + "/P-FRAMES/"
             if not os.path.exists(dir_local_p_frames):
                 os.makedirs(dir_local_p_frames)
-            cap = cv2.VideoCapture(path)
+            self.cap.open(path,apiPreference=cv2.CAP_FFMPEG)
             index_show = 1
             for frame_no in p_frames:
-                cap.set(cv2.CAP_PROP_POS_FRAMES, frame_no)
-                frame = cap.read()[1]
+                self.cap.set(cv2.CAP_PROP_POS_FRAMES, frame_no)
+                frame = self.cap.read()[1]
                 outname = 'p_'+str(frame_no)+'.jpg'               
                 cv2.imwrite(dir_local_p_frames + outname, frame)
                 self.status_save_p_frames_changed.emit(str(index_show) + " from " + str(len(p_frames)))
                 index_show = index_show + 1
-            cap.release()
+            self.cap.release()
             self.is_save_p_frames_changed.emit(True)
         else:
             pass
@@ -122,6 +118,7 @@ class IAndPFrameWDRManager(QThread):
         self._isRunning = False
         self.isRunning = False
         self.isFinished = True
+        self.cap.release()
         self.exit()
         self.quit()
         del self

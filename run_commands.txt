@@ -1,1 +1,1 @@
-pyinstaller --onefile --noconsole -F -w -n cameraanalyzer .\app.py
+pyinstaller --onefile, --noconsole, -F, -w, --windowed, -n camera_analyzer_v01, .\app.py
