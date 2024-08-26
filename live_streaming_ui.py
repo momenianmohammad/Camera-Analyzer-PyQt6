@@ -70,7 +70,7 @@ class LiveStreamingUI(QWidget):
             self._sys_sec = self._sys_sec + 1
             self.btnRecord.setEnabled(False)
             self.btnRecord.setText(str(self._sys_sec))
-            if self._sys_sec == ENABLE_MENU_DELAY:
+            if self._sys_sec == ENABLE_MENU_DELAY * 2:
                 self._is_recording_btn = False
                 self.flag_recording = False
                 self._sys_sec = 0
