@@ -14,6 +14,7 @@ class LiveStreamingUI(QWidget):
         self.flag_recording = False
         self._codec_str = ""
         self._sys_sec = 0
+        self.reverse_timer = ENABLE_MENU_DELAY * 2
         self.flag_recording_on_enable_menu = True   
     def setupUi(self, Form):
         Form.setObjectName("Form")
@@ -68,17 +69,24 @@ class LiveStreamingUI(QWidget):
             self.btnRecord.setVisible(False)
         if self._is_recording_btn:
             self._sys_sec = self._sys_sec + 1
+            self.reverse_timer = self.reverse_timer - 1
             self.btnRecord.setEnabled(False)
-            self.btnRecord.setText(str(self._sys_sec))
-            if self._sys_sec == ENABLE_MENU_DELAY * 2:
+            message = str(self._sys_sec) + " (s) is being record." if self._sys_sec < ENABLE_MENU_DELAY else str(self.reverse_timer) + " (s) wait for another record. " + "Video saved in: "  + self._dir + self._file_name
+            self.btnRecord.setText(message)
+            if self._sys_sec == ENABLE_MENU_DELAY:
+                self.out.release()
+            elif self._sys_sec == ENABLE_MENU_DELAY * 2:
+                self.reverse_timer = ENABLE_MENU_DELAY * 2
+                self._sys_sec = 0
                 self._is_recording_btn = False
                 self.flag_recording = False
-                self._sys_sec = 0
-                self.btnRecord.setEnabled(True)
-                self.btnRecord.setText("Start recording")
-                self.enable_menu_changed.emit(True)
                 self.flag_recording_on_enable_menu = True
-                self.out.release()
+                self.btnRecord.setEnabled(True)
+                self.btnRecord.setText("Start a new record")
+
+
+
+                
     @pyqtSlot(list)
     def on_basic_info_once(self, data):
         codec = data[0]
@@ -96,29 +104,29 @@ class LiveStreamingUI(QWidget):
                 self.fourcc = cv2.VideoWriter_fourcc(*'XVID') 
                 date = datetime.today().strftime('%Y-%m-%d')
                 hour = datetime.today().strftime('%H-%M-%S')
-                dir = WORK_SPACE_DIR + str(date) + "/" + str(int(self._fps_once)) + "fps-" + str(int(self._res_w_once)) + "x" + str(int(self._res_h_once)) + "res-h264/"
-                file_name = str(hour) + "-from-" + str(self._start_recording_from_sec) + "-to-" + str(self._start_recording_from_sec+self._recording_time) + ".avi"
-                if not os.path.exists(dir):
-                    os.makedirs(dir)
-                self.out = cv2.VideoWriter(dir + file_name, self.fourcc, float(self._fps_once), (int(self._res_w_once), int(self._res_h_once)))
+                self._dir = WORK_SPACE_DIR + str(date) + "/" + str(int(self._fps_once)) + "fps-" + str(int(self._res_w_once)) + "x" + str(int(self._res_h_once)) + "res-h264/"
+                self._file_name = str(hour) + "-from-" + str(self._start_recording_from_sec) + "-to-" + str(self._start_recording_from_sec+self._recording_time) + ".avi"
+                if not os.path.exists(self._dir):
+                    os.makedirs(self._dir)
+                self.out = cv2.VideoWriter(self._dir + self._file_name, self.fourcc, float(self._fps_once), (int(self._res_w_once), int(self._res_h_once)))
             case "hevc":
                 self.fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
                 date = datetime.today().strftime('%Y-%m-%d')
                 hour = datetime.today().strftime('%H-%M-%S')
-                dir = WORK_SPACE_DIR + str(date) + "/" + str(int(self._fps_once)) + "fps-" + str(int(self._res_w_once)) + "x" + str(int(self._res_h_once)) + "res-h265/"
-                file_name = str(hour) + "-from-" + str(self._start_recording_from_sec) + "-to-" + str(self._start_recording_from_sec+self._recording_time) + ".mp4"
-                if not os.path.exists(dir):
-                    os.makedirs(dir)
-                self.out = cv2.VideoWriter(dir + file_name, self.fourcc, self._fps_once, (int(self._res_w_once), int(self._res_h_once)))
+                self._dir = WORK_SPACE_DIR + str(date) + "/" + str(int(self._fps_once)) + "fps-" + str(int(self._res_w_once)) + "x" + str(int(self._res_h_once)) + "res-h265/"
+                self._file_name = str(hour) + "-from-" + str(self._start_recording_from_sec) + "-to-" + str(self._start_recording_from_sec+self._recording_time) + ".mp4"
+                if not os.path.exists(self._dir):
+                    os.makedirs(self._dir)
+                self.out = cv2.VideoWriter(self._dir + self._file_name, self.fourcc, self._fps_once, (int(self._res_w_once), int(self._res_h_once)))
             case _:
                 self.fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
                 date = datetime.today().strftime('%Y-%m-%d')
                 hour = datetime.today().strftime('%H-%M-%S')
-                dir = WORK_SPACE_DIR + str(date) + "/" + str(int(self._fps_once)) + "fps-" + str(int(self._res_w_once)) + "x" + str(int(self._res_h_once)) + "res-h265/"
-                file_name = str(hour) + "-from-" + str(self._start_recording_from_sec) + "-to-" + str(self._start_recording_from_sec+self._recording_time) + ".mp4"
-                if not os.path.exists(dir):
-                    os.makedirs(dir)
-                self.out = cv2.VideoWriter(dir + file_name, self.fourcc, self._fps_once, (int(self._res_w_once), int(self._res_h_once)))
+                self._dir = WORK_SPACE_DIR + str(date) + "/" + str(int(self._fps_once)) + "fps-" + str(int(self._res_w_once)) + "x" + str(int(self._res_h_once)) + "res-h265/"
+                self._file_name = str(hour) + "-from-" + str(self._start_recording_from_sec) + "-to-" + str(self._start_recording_from_sec+self._recording_time) + ".mp4"
+                if not os.path.exists(self._dir):
+                    os.makedirs(self._dir)
+                self.out = cv2.VideoWriter(self._dir + self._file_name, self.fourcc, self._fps_once, (int(self._res_w_once), int(self._res_h_once)))
     def recording(self, cv_img):
         if self.flag_recording:
             rgb_image = cv2.cvtColor(cv_img, 1)
