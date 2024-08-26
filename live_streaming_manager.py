@@ -60,8 +60,6 @@ class LiveStreamingManager(QThread):
                     self.is_connected_changed.emit([True, 0,"Ok"])
                     self._connection_test = False
                     self._isRunning = False
-                    self.stop()
-                    break
             except cv2.error as e:
                 for k in dir(e):
                     if k[0:2] != "__":
@@ -87,7 +85,7 @@ class LiveStreamingManager(QThread):
     def prepare_video(self,link):
         try:
             self.cap.open(link,apiPreference=cv2.CAP_FFMPEG)
-            while self.cap.isOpened() and self.isRunning:  
+            while self.cap.isOpened() and self._isRunning:  
                 ret, cv_img = self.cap.read()
                 if not ret:
                     self.stop()

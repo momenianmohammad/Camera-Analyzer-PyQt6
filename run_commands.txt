@@ -1,1 +1,1 @@
-pyinstaller --icon=icon.png --onefile, --noconsole, -F, -w, --windowed, -n camera_analyzer_v01_3, .\app.py
+pyinstaller --icon=icon.png --onefile, --noconsole, -F, -w, -n camera_analyzer_v01_3, .\app.py

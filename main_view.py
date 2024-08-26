@@ -109,7 +109,7 @@ class MainView(QMainWindow):
         ls_data={
             'type_brand_streams': self._camera_essential_data['type_brand_streams'], # ['usb', '',1]
             'user_info': self._camera_essential_data['user_info'],
-            'profiles': [[25, 1920, 1080,'h264', 0]], # akhari compression, mitooni baghie ro ham bezani beshe additional
+            'profiles': [[25, 1920, 1080,'h265', 50]], # akhari compression, mitooni baghie ro ham bezani beshe additional
             'connection_test': False,
             'view_type': 'stream'
             }
