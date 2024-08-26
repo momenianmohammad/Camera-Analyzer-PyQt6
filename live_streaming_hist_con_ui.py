@@ -53,7 +53,8 @@ class LiveStreamingHistConUi(QMainWindow):
     @pyqtSlot(int)
     def on_basic_info_just_sys_second(self, sys_second):
         if self.contrast > 0:
-            self.enable_menu_changed.emit(True) 
+            if sys_second == ENABLE_MENU_DELAY // 3:
+                self.enable_menu_changed.emit(True) 
     @pyqtSlot(np.ndarray)
     def on_streaming(self, cv_img):
         if self.resizeWidth > 0:

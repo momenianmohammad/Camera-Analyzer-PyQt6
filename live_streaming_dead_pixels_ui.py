@@ -89,7 +89,7 @@ class LiveStreamingDeadPixelsUI(QMainWindow):
         self._clicked_status = self._clicked_status + 1
     @pyqtSlot(int)
     def on_basic_info_just_sys_second(self, sys_second):
-        if sys_second == ENABLE_MENU_DELAY // 10:
+        if sys_second == ENABLE_MENU_DELAY // 3:
             self.enable_menu_changed.emit(True) 
     @pyqtSlot(list)
     def on_basic_info_once(self, data):             

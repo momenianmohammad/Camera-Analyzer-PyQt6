@@ -60,7 +60,8 @@ class LiveStreamingUI(QWidget):
     @pyqtSlot(int)
     def on_basic_info_just_sys_second(self, sys_second):
         if self.flag_recording_on_enable_menu == True:
-            self.enable_menu_changed.emit(True)
+            if sys_second == ENABLE_MENU_DELAY // 3:
+                self.enable_menu_changed.emit(True)
         else: 
             self.enable_menu_changed.emit(False)
         self._start_recording_from_sec = sys_second
@@ -104,7 +105,7 @@ class LiveStreamingUI(QWidget):
                 self.fourcc = cv2.VideoWriter_fourcc(*'XVID') 
                 date = datetime.today().strftime('%Y-%m-%d')
                 hour = datetime.today().strftime('%H-%M-%S')
-                self._dir = WORK_SPACE_DIR + str(date) + "/" + str(int(self._fps_once)) + "fps-" + str(int(self._res_w_once)) + "x" + str(int(self._res_h_once)) + "res-h264/"
+                self._dir = WORK_SPACE_DIR + str(date) + "/"
                 self._file_name = str(hour) + "-from-" + str(self._start_recording_from_sec) + "-to-" + str(self._start_recording_from_sec+self._recording_time) + ".avi"
                 if not os.path.exists(self._dir):
                     os.makedirs(self._dir)
@@ -113,7 +114,7 @@ class LiveStreamingUI(QWidget):
                 self.fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
                 date = datetime.today().strftime('%Y-%m-%d')
                 hour = datetime.today().strftime('%H-%M-%S')
-                self._dir = WORK_SPACE_DIR + str(date) + "/" + str(int(self._fps_once)) + "fps-" + str(int(self._res_w_once)) + "x" + str(int(self._res_h_once)) + "res-h265/"
+                self._dir = WORK_SPACE_DIR + str(date) + "/"
                 self._file_name = str(hour) + "-from-" + str(self._start_recording_from_sec) + "-to-" + str(self._start_recording_from_sec+self._recording_time) + ".mp4"
                 if not os.path.exists(self._dir):
                     os.makedirs(self._dir)

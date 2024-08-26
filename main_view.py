@@ -20,7 +20,7 @@ class MainView(QMainWindow):
         self.flag_clicked_on_is_just_offline_mode = False
     def startMainWindow(self,is_offline =  False):
         self._ui.setupUi(self)
-        self.disableMenu(disable=False)
+        self.disableMenu(disable=True)
         if is_offline:
             self._ui.actionAttach_a_Video.triggered.connect(self.action_Attach_a_Video_Click)
         else:

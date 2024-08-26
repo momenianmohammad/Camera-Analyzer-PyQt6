@@ -16,13 +16,13 @@ class LiveStreamingView(QMainWindow):
         self.gridLayout = QGridLayout(self.scrollAreaWidgetContents)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.layout.addWidget(self.scrollArea)
+        from live_streaming_ui import LiveStreamingUI
+        from live_streaming_fps_bw_ui import LiveStreamingFpsBwUI
+        self._ui_streaming = LiveStreamingUI()
+        self._ui_bw = LiveStreamingFpsBwUI(graph_type='bw')
+        self._ui_fps = LiveStreamingFpsBwUI(graph_type='fps')
         match self.view_type:
             case 'stream':
-                from live_streaming_ui import LiveStreamingUI
-                from live_streaming_fps_bw_ui import LiveStreamingFpsBwUI
-                self._ui_streaming = LiveStreamingUI()
-                self._ui_bw = LiveStreamingFpsBwUI(graph_type='bw')
-                self._ui_fps = LiveStreamingFpsBwUI(graph_type='fps')
                 self._ui_streaming.setMinimumWidth(WIDTH_GRID_ITEM_VIEW_LIVE)
                 self._ui_streaming.setMinimumHeight(HEIGHT_GRID_ITEM_VIEW_LIVE - (HEIGHT_GRID_ITEM_VIEW_LIVE // 8))
                 self._ui_fps.setMinimumWidth(WIDTH_GRID_ITEM_VIEW_LIVE)
