@@ -72,10 +72,10 @@ class MainView(QMainWindow):
             self.disableMenu(True)
     @pyqtSlot(bool)
     def on_enable_menu(self, value):
-        if value == True:
-            self.disableMenu(False)
-        else:
+        if value == False:
             self.disableMenu(True)
+        else:
+            self.disableMenu(False)
     def stopThreadingOnWindowChanged(self, delete_offline_view = True):
         self.disableMenu(True)
         if delete_offline_view == True:
@@ -158,8 +158,13 @@ class MainView(QMainWindow):
         self.openIAndPFramesWDRGridWindow()
     @pyqtSlot(dict)
     def on_camera_essential_data(self, data):
-        if len(data) > 0:
-            self._camera_essential_data = data
+        self._camera_essential_data = data
+
+    @pyqtSlot(list)
+    def on_is_connected(self, data):
+        if data[0] == False: 
+            self._ui_login.return_to_login()
+        else:
             ls_data={
                 'type_brand_streams': self._camera_essential_data['type_brand_streams'], # ['usb', '',1]
                 'user_info': self._camera_essential_data['user_info'],
@@ -169,15 +174,8 @@ class MainView(QMainWindow):
                 }
             self.startMainWindow()
             self.startLiveStreamingGridWindow(data=ls_data)
-    @pyqtSlot(list)
-    def on_is_connected(self, data):
-        if len(data) > 0:
-            match data[0]:
-                case True:  
-                    pass
-                case False:
-                    self._ui_login.return_to_login()
             self._ui_login.deleteLoginLayout()
+
     def runShowAlertThreadingStop(self):
         QTimer.singleShot(RUN_TIME_DIALOGUE_STOP_THREAD, self.showAlertThreadingStop)
     def showAlertThreadingStop(self):     

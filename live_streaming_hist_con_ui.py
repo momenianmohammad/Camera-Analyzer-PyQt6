@@ -15,6 +15,7 @@ class LiveStreamingHistConUi(QMainWindow):
         self.alpha = 0.5
         self.bins = 16
         self.resizeWidth = 0
+        self.contrast = 0.0
         match hist_type:
             case 'r':
                 self._hist_type = 'r'
@@ -51,7 +52,7 @@ class LiveStreamingHistConUi(QMainWindow):
         Form.setWindowTitle(_translate("Form", APP_NAME))
     @pyqtSlot(int)
     def on_basic_info_just_sys_second(self, sys_second):
-        if sys_second == ENABLE_MENU_DELAY:
+        if self.contrast > 0:
             self.enable_menu_changed.emit(True) 
     @pyqtSlot(np.ndarray)
     def on_streaming(self, cv_img):
@@ -76,13 +77,13 @@ class LiveStreamingHistConUi(QMainWindow):
                 gray = cv2.cvtColor(cv_img, cv2.COLOR_BGR2GRAY)
                 histogram = cv2.calcHist([gray], [0], None, [self.bins], [0, 255]) / numPixels
                 self.lineGray.set_ydata(histogram)
-                contrast = gray.std()
-                self.fig.suptitle('Real Time Gray Scale Histogram. ' + "Contrast: " + str(round(contrast,2)) + " %", fontweight ="bold")
+                self.contrast = gray.std()
+                self.fig.suptitle('Real Time Gray Scale Histogram. ' + "Contrast: " + str(round(self.contrast,2)) + " %", fontweight ="bold")
                 self.canvas.draw()
             case _:
                 gray = cv2.cvtColor(cv_img, cv2.COLOR_BGR2GRAY)
                 histogram = cv2.calcHist([gray], [0], None, [self.bins], [0, 255]) / numPixels
                 self.lineGray.set_ydata(histogram)
                 contrast = gray.std()
-                self.fig.suptitle('Real Time Gray Scale Histogram. ' + "Contrast: " + str(round(contrast,2)) + " %", fontweight ="bold")
+                self.fig.suptitle('Real Time Gray Scale Histogram. ' + "Contrast: " + str(round(self.contrast,2)) + " %", fontweight ="bold")
                 self.canvas.draw()

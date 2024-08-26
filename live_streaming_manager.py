@@ -5,17 +5,6 @@ class LiveStreamingManager(QThread):
     basic_info_once_changed = pyqtSignal(list)
     basic_info_just_sys_second_changed = pyqtSignal(int)
     is_connected_changed = pyqtSignal(list)
-    def __init__(self, data= {}, parent=None):
-        super(LiveStreamingManager, self).__init__(parent=parent)
-        self.initializeValues()
-        self.assistant(data)
-        self._data = data
-    def run(self):
-        if self._data is None:
-            self.stop()
-        else:
-            self.check_ip_camera_connectivity()
-            self.prepare_video()
     def initializeValues(self):
         self.cap = cv2.VideoCapture()
         self._isRunning = True
@@ -30,49 +19,46 @@ class LiveStreamingManager(QThread):
         self._interval = 0
         self._connection_test = False
         self._fps_cv = 0
+    def __init__(self, data= {}, parent=None):
+        super(LiveStreamingManager, self).__init__(parent=parent)
+        self.initializeValues()
+        self._data = data
+    def run(self):
+        self.assistant(self._data)
     def assistant(self, data):
-        if data is None:
-            self.stop() 
-        else:
-            if len(data) > 0:
-                if 'path_offline' in data:
-                    path = data['path_offline']
-                    if path != '':
-                        self._golden_link = path
-                else:
-                    if 'connection_test' in data:
-                        self._connection_test = data['connection_test']
-                        if 'user_info' in data:
-                            ip = data['user_info'][0]
-                            user = data['user_info'][1]
-                            password = data['user_info'][2]
-                        if 'type_brand_streams' in data:
-                            usb_or_ip = data['type_brand_streams'][0]
-                            brand = data['type_brand_streams'][1]
-                        if 'profile' in data:
-                            fps = data['profile'][0]
-                            self._fps_cv = fps
-                            res_w = data['profile'][1]
-                            res_h = data['profile'][2]
-                            res = str(res_w) + "x" + str(res_h)
-                            codec = data['profile'][3]
-                            compression = data['profile'][4]
-                        match self._connection_test:
-                            case True: 
-                                match  usb_or_ip, brand:
-                                    case 'ip', 'axis': 
-                                        self._golden_link = "rtsp://" + user + ":" + password + "@" + ip + ":554/axis-media/media.amp"
-                            case False:
-                                match  usb_or_ip, brand:
-                                    case 'ip', 'axis':
-                                        self._golden_link = "rtsp://" + user + ":" + password + "@" + ip + ":554/axis-media/media.amp?fps=" + str(fps) + "&resolution=" + res + "&compression=" + str(compression) + "&videocodec=" + str(codec)
-    def check_ip_camera_connectivity(self):
-        while self._isRunning and self._connection_test:
+        if len(data) > 0:
+            self._connection_test = data['connection_test']
+            ip = data['user_info'][0]
+            user = data['user_info'][1]
+            password = data['user_info'][2]
+            usb_or_ip = data['type_brand_streams'][0]
+            brand = data['type_brand_streams'][1]
+            fps = data['profile'][0]
+            self._fps_cv = fps
+            res_w = data['profile'][1]
+            res_h = data['profile'][2]
+            res = str(res_w) + "x" + str(res_h)
+            codec = data['profile'][3]
+            compression = data['profile'][4]
+            self._golden_link = "rtsp://" + user + ":" + password + "@" + ip + ":554/axis-media/media.amp?fps=" + str(fps) + "&resolution=" + res + "&compression=" + str(compression) + "&videocodec=" + str(codec)
+            match self._connection_test:
+                case True: 
+                    match  usb_or_ip, brand:
+                        case 'ip', 'axis':
+                            self.check_ip_camera_connectivity(link=self._golden_link)    
+                case False:
+                        match  usb_or_ip, brand:
+                            case 'ip', 'axis':
+                                self.prepare_video(link=self._golden_link)
+
+    def check_ip_camera_connectivity(self,link):
+        while self._isRunning and self._connection_test == True:
             try:
                 self.cap.setExceptionMode(True)
-                self.cap.open(self._golden_link,apiPreference=cv2.CAP_FFMPEG,params=[cv2.CAP_PROP_OPEN_TIMEOUT_MSEC, 5000],)
+                self.cap.open(link,apiPreference=cv2.CAP_FFMPEG,params=[cv2.CAP_PROP_OPEN_TIMEOUT_MSEC, 5000],)
                 if self.cap.isOpened():
                     self.is_connected_changed.emit([True, 0,"Ok"])
+                    self._connection_test = False
                     self._isRunning = False
                     self.stop()
                     break
@@ -81,10 +67,12 @@ class LiveStreamingManager(QThread):
                     if k[0:2] != "__":
                         self.is_connected_changed.emit([False, int(e.code),str(e.err)])
                         self._isRunning = False
+                        self._connection_test = False
                         self.stop()
                         break
                 if e.err == "!_src.empty()":
                     self.is_connected_changed.emit([False, int(e.code),str(e.err)])
+                    self._connection_test = False
                     self._isRunning = False
                     self.stop()
                     break
@@ -92,10 +80,13 @@ class LiveStreamingManager(QThread):
                 self.stop()
                 break
         else:
+            self._connection_test = False
+            self._isRunning = False
+            self.stop()
             self.is_connected_changed.emit([False, -10 ,"No need to check connection"])  
-    def prepare_video(self):
+    def prepare_video(self,link):
         try:
-            self.cap.open(self._golden_link,apiPreference=cv2.CAP_FFMPEG)
+            self.cap.open(link,apiPreference=cv2.CAP_FFMPEG)
             while self.cap.isOpened() and self.isRunning:  
                 ret, cv_img = self.cap.read()
                 if not ret:

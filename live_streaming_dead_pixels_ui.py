@@ -31,15 +31,15 @@ class LiveStreamingDeadPixelsUI(QMainWindow):
         self.lblShot1 = QLabel(self.verticalLayoutWidget)
         self.lblShot1.setScaledContents(True)
         self.lblShot1.setObjectName("lblShot1")
-        self.lblShot1.setMinimumSize(AVAILABLE_WIDTH // 3, 0)
+        self.lblShot1.setMinimumSize(AVAILABLE_WIDTH // 4, 0)
         self.lblMsgDeadPixelsStatus = QLabel(self.verticalLayoutWidget)
         self.lblMsgDeadPixelsStatus.setScaledContents(True)
         self.lblMsgDeadPixelsStatus.setObjectName("lblMsgDeadPixelsStatus")
-        self.lblMsgDeadPixelsStatus.setMinimumSize(AVAILABLE_WIDTH // 10, 0)
+        self.lblMsgDeadPixelsStatus.setMinimumSize(AVAILABLE_WIDTH // 2, 0)
         self.lblShot2 = QLabel(self.verticalLayoutWidget)
         self.lblShot2.setScaledContents(True)
         self.lblShot2.setObjectName("lblShot2")
-        self.lblShot2.setMinimumSize(AVAILABLE_WIDTH // 3, 0)
+        self.lblShot2.setMinimumSize(AVAILABLE_WIDTH // 4, 0)
         self.horizontalLayout.addWidget(self.lblShot1)
         self.horizontalLayout.addWidget(self.lblShot2)
         self.horizontalLayout.addWidget(self.lblMsgDeadPixelsStatus)
@@ -61,9 +61,9 @@ class LiveStreamingDeadPixelsUI(QMainWindow):
         self.lblMsgDeadPixelsStatus.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignHCenter)
     def actionClick(self):
         self.lblCamera.setMinimumSize(AVAILABLE_WIDTH, AVAILABLE_HEIGHT // 2)
-        self.lblMsgDeadPixelsStatus.setMinimumSize(AVAILABLE_WIDTH // 10, AVAILABLE_HEIGHT // 4)
-        self.lblShot1.setMinimumSize(AVAILABLE_WIDTH // 3, AVAILABLE_HEIGHT // 4)
-        self.lblShot2.setMinimumSize(AVAILABLE_WIDTH // 3, AVAILABLE_HEIGHT // 4)
+        self.lblMsgDeadPixelsStatus.setMinimumSize(AVAILABLE_WIDTH // 2, AVAILABLE_HEIGHT // 4)
+        self.lblShot1.setMinimumSize(AVAILABLE_WIDTH // 4, AVAILABLE_HEIGHT // 4)
+        self.lblShot2.setMinimumSize(AVAILABLE_WIDTH // 4, AVAILABLE_HEIGHT // 4)
         shot1 = []
         shot2 = []
         match self._clicked_status:
@@ -89,7 +89,7 @@ class LiveStreamingDeadPixelsUI(QMainWindow):
         self._clicked_status = self._clicked_status + 1
     @pyqtSlot(int)
     def on_basic_info_just_sys_second(self, sys_second):
-        if sys_second == ENABLE_MENU_DELAY:
+        if sys_second == ENABLE_MENU_DELAY // 10:
             self.enable_menu_changed.emit(True) 
     @pyqtSlot(list)
     def on_basic_info_once(self, data):             

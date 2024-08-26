@@ -110,20 +110,21 @@ class LoginView(QWidget):
     def on_enable_button(self, value):
         self.pushButton_submit.setEnabled(value)
     def call_camera(self):
-        self.waiting_in_login()
         from live_streaming_manager import LiveStreamingManager
+        self.waiting_in_login()
         self._ip = str(self.lineEdit_ip.text())
         self._user = str(self.lineEdit_user.text())
         self._password = str(self.lineEdit_password.text()) 
-        self._camera_essential_data =  {
-                'user_info':[self._ip, self._user, self._password],
+        self._camera_essential_data = {
                 'connection_test': True,
-                'type_brand_streams': ['ip', 'axis', 4]
-                 }
-        self.camera_essential_data_changed.emit(self._camera_essential_data)
+                'user_info':[self._ip, self._user, self._password],
+                'type_brand_streams': ['ip', 'axis', 4],
+                'profile': [25, 160, 120,'h265', 100], # akhari compression, mitooni baghie ro ham bezani beshe additional
+        }
         self._camera_manager = LiveStreamingManager(data=self._camera_essential_data)
-        self._camera_manager.start()
         self._camera_manager.is_connected_changed.connect(self.on_is_connected)
+        self.camera_essential_data_changed.emit(self._camera_essential_data)
+        self._camera_manager.start()
     @pyqtSlot(list)
     def on_is_connected(self, data):
         if len(data) > 0:

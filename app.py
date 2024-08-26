@@ -18,12 +18,12 @@ RUN_TIME_THREAD_LIMITATION = 3600
 RUN_TIME_DIALOGUE_STOP_THREAD = RUN_TIME_THREAD_LIMITATION * 1000
 WORK_SPACE_DIR = "C:/ZZ-IROST-CAMERA-ANALYZER/"
 I_AND_P_FRAMES_DIR = WORK_SPACE_DIR + "I-AND-P-FRAMES/"
-ENABLE_MENU_DELAY = 20
+ENABLE_MENU_DELAY = 60
 MIN_SHOW_FRAME = 200
 MAX_SHOW_FRAME = MIN_SHOW_FRAME * 10
 RESCALE_SIZE_FOR_WDR = 4
 APP_NAME = "IROST Camera Analyzer"
-custom_font = QFont("Calibri", 14)
+custom_font = QFont("Calibri", 12)
 app.setFont(custom_font, "QLabel")
 app.setFont(custom_font, "QPushButton")
 app.setFont(custom_font, "QComboBox")

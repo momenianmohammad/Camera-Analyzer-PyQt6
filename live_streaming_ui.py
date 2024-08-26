@@ -14,7 +14,7 @@ class LiveStreamingUI(QWidget):
         self.flag_recording = False
         self._codec_str = ""
         self._sys_sec = 0
-        self.flag_recording_on_enable_meny = False   
+        self.flag_recording_on_enable_menu = True   
     def setupUi(self, Form):
         Form.setObjectName("Form")
         self.verticalLayoutWidget = QWidget(Form)
@@ -58,8 +58,10 @@ class LiveStreamingUI(QWidget):
         return QPixmap.fromImage(p)
     @pyqtSlot(int)
     def on_basic_info_just_sys_second(self, sys_second):
-        if sys_second == ENABLE_MENU_DELAY and self.flag_recording_on_enable_meny == False:
+        if self.flag_recording_on_enable_menu == True:
             self.enable_menu_changed.emit(True)
+        else: 
+            self.enable_menu_changed.emit(False)
         self._start_recording_from_sec = sys_second
         if (sys_second > RUN_TIME_THREAD_LIMITATION):
             self.btnRecord.setEnabled(False)
@@ -68,14 +70,14 @@ class LiveStreamingUI(QWidget):
             self._sys_sec = self._sys_sec + 1
             self.btnRecord.setEnabled(False)
             self.btnRecord.setText(str(self._sys_sec))
-            if self._sys_sec >= self._recording_time:
+            if self._sys_sec == ENABLE_MENU_DELAY:
                 self._is_recording_btn = False
                 self.flag_recording = False
                 self._sys_sec = 0
                 self.btnRecord.setEnabled(True)
                 self.btnRecord.setText("Start recording")
                 self.enable_menu_changed.emit(True)
-                self.flag_recording_on_enable_meny = True
+                self.flag_recording_on_enable_menu = True
                 self.out.release()
     @pyqtSlot(list)
     def on_basic_info_once(self, data):
@@ -86,8 +88,7 @@ class LiveStreamingUI(QWidget):
         self._res_h_once = data[3]
         self.btnRecord.setEnabled(True)
     def btn_start_stop_recording_clicked(self):
-        self.flag_recording_on_enable_meny = True
-        self.enable_menu_changed.emit(False)
+        self.flag_recording_on_enable_menu = False
         self._is_recording_btn = not self._is_recording_btn
         self.flag_recording = not self.flag_recording
         match self._codec_str:

@@ -69,7 +69,7 @@ class LiveStreamingGridView(QWidget):
             lsv = LiveStreamingView(data=lsv_data)
             self._live_manager = lsv._camera_manager
             self._live_view = lsv            
-            if i > 0:
+            if data['profiles'][i][0] != 25:
                 lsv._ui_streaming.btnRecord.setHidden(True)
                 lsv._ui_streaming.btnRecord.setVisible(False)
                 lsv._ui_streaming.btnRecord.setEnabled(False)
