@@ -59,7 +59,7 @@ class LiveStreamingUI(QWidget):
         return QPixmap.fromImage(p)
     @pyqtSlot(int)
     def on_basic_info_just_sys_second(self, sys_second):
-        if self.flag_recording_on_enable_menu == True:
+        if self.flag_recording_on_enable_menu == True and self._is_recording_btn == False:
             if sys_second == ENABLE_MENU_DELAY // 3:
                 self.enable_menu_changed.emit(True)
         else: 
@@ -77,6 +77,7 @@ class LiveStreamingUI(QWidget):
             if self._sys_sec == ENABLE_MENU_DELAY:
                 self.out.release()
             elif self._sys_sec == ENABLE_MENU_DELAY * 2:
+                self.enable_menu_changed.emit(True)
                 self.reverse_timer = ENABLE_MENU_DELAY * 2
                 self._sys_sec = 0
                 self._is_recording_btn = False
