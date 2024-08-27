@@ -41,9 +41,8 @@ class LiveStreamingUI(QWidget):
     def retranslateUi(self, Form):
         _translate = QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", APP_NAME))
-        self.btnRecord.setText(_translate("Form", "Start recording"))
+        self.btnRecord.setText(_translate("Form", "Record stream (Close another windows or softwares before starting)."))
         self.btnRecord.setEnabled(False)
-        self.btnRecord.setText("Start recording")
         self.btnRecord.clicked.connect(self.btn_start_stop_recording_clicked)
     @pyqtSlot(np.ndarray)
     def on_streaming(self, cv_img):
@@ -84,7 +83,7 @@ class LiveStreamingUI(QWidget):
                 self.flag_recording = False
                 self.flag_recording_on_enable_menu = True
                 self.btnRecord.setEnabled(True)
-                self.btnRecord.setText("Start a new record")
+                self.btnRecord.setText("Record stream (Close another windows or softwares before starting).")
 
 
 
