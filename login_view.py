@@ -131,6 +131,7 @@ class LoginView(QWidget):
             self.is_connected_changed.emit(data)
     def waiting_in_login(self):
         self.lineEdit_user.setEnabled(False)
+        self.pushButton_offline_mode.setEnabled(False)
         self.lineEdit_password.setEnabled(False)
         self.lineEdit_ip.setEnabled(False)
         self.pushButton_submit.setEnabled(False)
@@ -145,8 +146,10 @@ class LoginView(QWidget):
         self.lineEdit_password.setText("")
         self.lineEdit_ip.setText("")
         self.pushButton_submit.setEnabled(True)
+        self.pushButton_offline_mode.setEnabled(True)
         self.labelMsg.setText("Something went wrong, try again")
     def mainViewOfflineMode(self):
+        self.pushButton_offline_mode.setEnabled(False)
         self.is_just_offline_view_changed.emit(True)
 
 

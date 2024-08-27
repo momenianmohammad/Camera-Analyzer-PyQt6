@@ -64,8 +64,6 @@ class MainView(QMainWindow):
             self.flag_clicked_on_is_just_offline_mode = True
             self._ui_login.deleteLoginLayout()
             self.startMainWindow(is_offline = True)
-            self._ui.menuLive_Streaming.setHidden(True)
-            self._ui.menuLive_Streaming.setVisible(False)
             self._ui.menuLive_Streaming.setEnabled(False)
             self.disableMenu(False)
         else:
@@ -175,6 +173,7 @@ class MainView(QMainWindow):
             self.startMainWindow()
             self.startLiveStreamingGridWindow(data=ls_data)
             self._ui_login.deleteLoginLayout()
+            self._ui.menuAdditional_Features.setEnabled(False)
 
     def runShowAlertThreadingStop(self):
         QTimer.singleShot(RUN_TIME_DIALOGUE_STOP_THREAD, self.showAlertThreadingStop)
