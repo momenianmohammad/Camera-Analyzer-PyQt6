@@ -13,7 +13,7 @@ class LiveStreamingHistConUi(QMainWindow):
         self.setupUi(self)
         self.lw = 4
         self.alpha = 0.5
-        self.bins = 16
+        self.bins = 256
         self.resizeWidth = 0
         self.contrast = 0.0
         match hist_type:

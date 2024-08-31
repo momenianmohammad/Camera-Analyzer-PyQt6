@@ -58,10 +58,11 @@ class IAndPFrameWDRUI(QWidget):
             QPixmapCache.clear()
             frame = self._data['frame']
             color = ('b', 'g', 'r')
+            self.bins = 256
             for i,col in enumerate(color):
-                histr = cv2.calcHist([frame],[i],None,[16],[0,16])
+                histr = cv2.calcHist([frame],[i],None,[self.bins],[0,self.bins - 1])
                 plt.plot(histr,color = col)
-                plt.xlim([0,16])
+                plt.xlim([0,self.bins - 1])
             self.canvas.draw()
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             contrast = gray.std()
