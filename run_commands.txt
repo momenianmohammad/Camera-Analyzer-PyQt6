@@ -1,2 +1,2 @@
 build:
-pyinstaller --icon=icon.png, --onefile, --noconsole, -F, -w, -n aa_camera_analyzer_v01_4, .\app.py
+pyinstaller --icon=icon.png, --onefile, --noconsole, -F, -w, -n aa_camera_analyzer_v01_5, .\app.py
