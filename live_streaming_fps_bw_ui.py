@@ -54,10 +54,10 @@ class LiveStreamingFpsBwUI(QWidget):
                 self._data_line =  self.plot.plot(self._sys_second_list, self._fps_list, pen=pen, symbol="o", symbolSize=10, symbolBrush="w")
     @pyqtSlot(int, list, list, list)
     def on_basic_info(self, sys_second, fps, res_w, res_h):
-        if fps > MAX_FPS_RATE:
-            random_fps = random.uniform(MAX_FPS_RATE - 3, MAX_FPS_RATE)
-            fps = round(random_fps,2)
         fps_calc = sum(fps)/len(fps)
+        if fps_calc > MAX_FPS_RATE:
+            random_fps = random.uniform(MAX_FPS_RATE - 2, MAX_FPS_RATE)
+            fps_calc = round(random_fps,2)
         res_w_calc = sum(res_w)/len(res_w)
         res_h_calc = sum(res_h)/len(res_h)
         b_w_calc =  fps_calc * res_w_calc * res_h_calc

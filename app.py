@@ -22,7 +22,7 @@ ENABLE_MENU_DELAY = 60
 MIN_SHOW_FRAME = 200
 MAX_SHOW_FRAME = MIN_SHOW_FRAME * 20
 RESCALE_SIZE_FOR_WDR = 4
-MAX_FPS_RATE = 30
+MAX_FPS_RATE = 27
 APP_NAME = "IROST Camera Analyzer"
 custom_font = QFont("Calibri", 12)
 app.setFont(custom_font, "QLabel")

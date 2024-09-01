@@ -58,7 +58,7 @@ class IAndPFrameWDRUI(QWidget):
             QPixmapCache.clear()
             frame = self._data['frame']
             color = ('b', 'g', 'r')
-            self.bins = 256
+            self.bins = 16
             for i,col in enumerate(color):
                 histr = cv2.calcHist([frame],[i],None,[self.bins],[0,self.bins - 1])
                 plt.plot(histr,color = col)

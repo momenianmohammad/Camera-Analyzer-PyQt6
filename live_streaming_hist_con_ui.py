@@ -13,7 +13,7 @@ class LiveStreamingHistConUi(QMainWindow):
         self.setupUi(self)
         self.lw = 4
         self.alpha = 0.5
-        self.bins = 256
+        self.bins = 16
         self.resizeWidth = 0
         self.contrast = 0.0
         match hist_type:
@@ -85,6 +85,6 @@ class LiveStreamingHistConUi(QMainWindow):
                 gray = cv2.cvtColor(cv_img, cv2.COLOR_BGR2GRAY)
                 histogram = cv2.calcHist([gray], [0], None, [self.bins], [0, 255]) / numPixels
                 self.lineGray.set_ydata(histogram)
-                contrast = gray.std()
+                self.contrast = gray.std()
                 self.fig.suptitle('Real Time Gray Scale Histogram. ' + "Contrast: " + str(round(self.contrast,2)) + " %", fontweight ="bold")
                 self.canvas.draw()
