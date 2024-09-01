@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='aa_camera_analyzer_v01_5',
+    name='aa_camera_analyzer_v01_6',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

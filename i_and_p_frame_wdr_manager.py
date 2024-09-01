@@ -36,7 +36,7 @@ class IAndPFrameWDRManager(QThread):
             frames_count = subprocess.check_output(command1 + path,shell=True).decode()
             basic_info = subprocess.check_output(command2 + path,shell=True).decode()
             if (int(frames_count) > MIN_SHOW_FRAME and int(frames_count) < MAX_SHOW_FRAME):
-                basic_info  = basic_info.replace("\n", " , ")
+                # basic_info  = basic_info.replace("\n", " , ")
                 data = {
                     "count_of_frames": int(frames_count),
                     "basic_info": basic_info,
