@@ -22,13 +22,10 @@ class LoginView(QWidget):
         widgets_height_pos = (AVAILABLE_HEIGHT // 2) + (AVAILABLE_HEIGHT // 4)
         widgets_width = AVAILABLE_WIDTH // 5
         widgets_height = AVAILABLE_HEIGHT // 20
-
         self.labelIrost = QLabel(self.frame)
         self.labelIrost.setGeometry(QRect(widgets_width_pos, widgets_height_pos - 30*(widgets_height - widgets_height//2), widgets_width, widgets_height * 4))
-        self.labelIrost.setPixmap(QPixmap(".\\irost.jpg"))
+        self.labelIrost.setPixmap(QPixmap(self.resource_path("irost.jpg")))
         self.labelIrost.setScaledContents(True)
-
-
         self.pushButton_offline_mode = QPushButton(self.frame)
         self.pushButton_offline_mode.setGeometry(QRect(widgets_width_pos, widgets_height_pos - 21*(widgets_height - widgets_height//2), widgets_width, widgets_height))
         self.pushButton_offline_mode.setObjectName("pushButton_offline_mode")
@@ -163,5 +160,12 @@ class LoginView(QWidget):
         self.pushButton_offline_mode.setEnabled(False)
         self.is_just_offline_view_changed.emit(True)
 
+    def resource_path(self, relative_path):
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+            base_path = sys._MEIPASS
+        else:
+            base_path = os.path.abspath(".")
+        return os.path.join(base_path, relative_path)
 
 

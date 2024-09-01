@@ -1,2 +1,2 @@
 build:
-pyinstaller --icon=icon.png, --onefile, --noconsole, -F, -w, -n aa_camera_analyzer_v01_6, .\app.py
+pyinstaller --add-data=irost.jpg:. --add-data=waiting.png:. --icon=icon.png, --onefile, --noconsole, -F, -w, -n aa_camera_analyzer, .\app.py

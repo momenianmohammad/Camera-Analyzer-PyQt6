@@ -26,7 +26,7 @@ class LiveStreamingUI(QWidget):
         self.verticalLayout.setObjectName("verticalLayout")
         self.lblCamera = QLabel(self.verticalLayoutWidget)
         self.lblCamera.setText("")
-        self.lblCamera.setPixmap(QPixmap(".\\waiting.png"))
+        self.lblCamera.setPixmap(QPixmap(self.resource_path("waiting.png")))
         self.lblCamera.setScaledContents(True)
         self.lblCamera.setObjectName("lblCamera")
         self.verticalLayout.addWidget(self.lblCamera)
@@ -132,3 +132,11 @@ class LiveStreamingUI(QWidget):
         if self.flag_recording:
             rgb_image = cv2.cvtColor(cv_img, 1)
             self.out.write(rgb_image)
+
+    def resource_path(self, relative_path):
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+            base_path = sys._MEIPASS
+        else:
+            base_path = os.path.abspath(".")
+        return os.path.join(base_path, relative_path)
