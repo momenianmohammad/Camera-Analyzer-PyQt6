@@ -2,7 +2,7 @@ import sys,os,re,cv2,numpy as np,time,pyqtgraph as pg,subprocess,matplotlib.pypl
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from datetime import datetime
 from PyQt6.QtGui import QFont,QAction,QImage,QPixmap,QPixmapCache
-from PyQt6.QtWidgets import QApplication,QWidget,QMenuBar,QMenu,QStatusBar,QMessageBox,QMainWindow,QFileDialog,QFrame,QLabel,QComboBox,QLineEdit,QPushButton,QHBoxLayout,QVBoxLayout,QScrollArea,QGridLayout
+from PyQt6.QtWidgets import QApplication,QWidget,QMenuBar,QMenu,QStatusBar,QMessageBox,QMainWindow,QFileDialog,QFrame,QLabel,QComboBox,QLineEdit,QPushButton,QHBoxLayout,QVBoxLayout,QScrollArea,QGridLayout, QCheckBox
 from PyQt6.QtCore import pyqtSignal,pyqtSlot,Qt,QRect,QCoreApplication,QMetaObject,QTimer,QObject,QThread
 app = QApplication(sys.argv)
 screen = app.primaryScreen()

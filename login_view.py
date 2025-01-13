@@ -9,6 +9,7 @@ class LoginView(QWidget):
         self._login_model = login_model
         self._login_controller = login_controller
         self._camera_essential_data = {}
+        self._state_unlimited_recordnig = False
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(AVAILABLE_WIDTH , AVAILABLE_HEIGHT - AVAILABLE_HEIGHT // 10)
@@ -57,6 +58,12 @@ class LoginView(QWidget):
         self.pushButton_submit.setGeometry(QRect(widgets_width_pos, widgets_height_pos - 1*(widgets_height - widgets_height//2), widgets_width, widgets_height))
         self.pushButton_submit.setEnabled(False)
         self.pushButton_submit.setObjectName("pushButton_submit")
+
+        self.checkBox_unlimited_recording = QCheckBox(self.frame)
+        self.checkBox_unlimited_recording.setGeometry(QRect(widgets_width_pos, widgets_height_pos - (-2)*(widgets_height - widgets_height//2), widgets_width, widgets_height))
+        self.checkBox_unlimited_recording.setEnabled(True)
+        self.checkBox_unlimited_recording.setObjectName("checkBox_unlimited_recording")
+
         self.retranslateUi(Form)
         QMetaObject.connectSlotsByName(Form)
         self.connectWidgets()
@@ -65,6 +72,7 @@ class LoginView(QWidget):
         Form.setWindowTitle(_translate("Form", "Login to Camera"))
         self.pushButton_offline_mode.setText(_translate("Form", "Offline Mode"))
         self.pushButton_submit.setText(_translate("Form", "SUBMIT"))
+        self.checkBox_unlimited_recording.setText(_translate("Form", "Unlimited Camera Recording"))
         self.lineEdit_ip.setPlaceholderText(_translate("Form", "IP Address: 192.168.x.x"))
         self.lineEdit_user.setPlaceholderText(_translate("Form", "Username: root"))
         self.lineEdit_password.setPlaceholderText(_translate("Form", "Password"))
@@ -75,6 +83,7 @@ class LoginView(QWidget):
         self.labelMsg.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignHCenter)
         self.labelIrost.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignHCenter)
     def connectWidgets(self):
+        self.checkBox_unlimited_recording.stateChanged.connect(self.unlimited_recording_state_changed)
         self.lineEdit_ip.textChanged.connect(self._login_controller.change_call_camera_ip)
         self.lineEdit_user.textChanged.connect(self._login_controller.change_call_camera_user)
         self.lineEdit_password.textChanged.connect(self._login_controller.change_call_camera_password)
@@ -86,6 +95,14 @@ class LoginView(QWidget):
         self._login_model.user_changed.connect(self.on_call_camera_user)
         self._login_model.password_changed.connect(self.on_call_camera_password)
         self._login_model.enable_button_changed.connect(self.on_enable_button)
+    
+    def unlimited_recording_state_changed(self, state):
+      if state == 2:
+         self._state_unlimited_recordnig = True
+      else:
+         self._state_unlimited_recordnig = False
+
+
     def deleteLoginLayout(self):
         self.comboBox_type.setParent(None)
         self.comboBox_brand.setParent(None)
@@ -128,6 +145,7 @@ class LoginView(QWidget):
                 'user_info':[self._ip, self._user, self._password],
                 'type_brand_streams': ['ip', 'axis', 4],
                 'profile': [25, 160, 120,'h265', 100], # akhari compression, mitooni baghie ro ham bezani beshe additional
+                'unlimited_recording': self._state_unlimited_recordnig
         }
         self._camera_manager = LiveStreamingManager(data=self._camera_essential_data)
         self._camera_manager.is_connected_changed.connect(self.on_is_connected)

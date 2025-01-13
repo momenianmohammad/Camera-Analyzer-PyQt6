@@ -163,6 +163,10 @@ class MainView(QMainWindow):
         if data[0] == False: 
             self._ui_login.return_to_login()
         else:
+            # Inja bayad ma bebinim ke az call_camera dakhele 
+            # login view unlimited_recording dar che vaze nesbat 
+            # be oon profile besazim ke ghatan ye dooneyi va [25, 1920, 1080,'h265', 50] 
+            # hast bedoone hist o fps o dead o .. hame chi. testesh be USB bi faydas
             ls_data={
                 'type_brand_streams': self._camera_essential_data['type_brand_streams'], # ['usb', '',1]
                 'user_info': self._camera_essential_data['user_info'],
