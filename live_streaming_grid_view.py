@@ -37,6 +37,7 @@ class LiveStreamingGridView(QWidget):
         except:
             pass
     def showMain(self, data = {}):
+        # print(data)
         col = len(data['profiles'])
         view_type = data['view_type']
         for i in range(0, col):
@@ -47,7 +48,8 @@ class LiveStreamingGridView(QWidget):
                     'user_info': data['user_info'],
                     'profile': data['profiles'][i],
                     'connection_test': False,
-                    'view_type': 'stream'
+                    'view_type': 'stream',
+                    'unlimited_recording': data['unlimited_recording']
                     }
                 case 'hist':
                     lsv_data={

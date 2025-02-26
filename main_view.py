@@ -109,7 +109,8 @@ class MainView(QMainWindow):
             'user_info': self._camera_essential_data['user_info'],
             'profiles': [[25, 1920, 1080,'h264', 0]], # akhari compression, mitooni baghie ro ham bezani beshe additional
             'connection_test': False,
-            'view_type': 'stream'
+            'view_type': 'stream',
+            'unlimited_recording': self._camera_essential_data['unlimited_recording']
             }
         self.startLiveStreamingGridWindow(data=ls_data)
     def action_2_Streams_Click(self, s):
@@ -119,7 +120,8 @@ class MainView(QMainWindow):
             'user_info': self._camera_essential_data['user_info'],
             'profiles': [[12, 1280, 720,'h265', 50], [12, 1280, 720,'h265', 50]], # akhari compression, mitooni baghie ro ham bezani beshe additional
             'connection_test': False,
-            'view_type': 'stream'
+            'view_type': 'stream',
+            'unlimited_recording': self._camera_essential_data['unlimited_recording']
             }
         self.startLiveStreamingGridWindow(data=ls_data)
     def action_3_Streams_Click(self, s):
@@ -129,7 +131,8 @@ class MainView(QMainWindow):
             'user_info': self._camera_essential_data['user_info'],
             'profiles': [[8, 640, 480,'h265', 75], [8, 640, 480,'h265', 75] ,[8, 640, 480,'h265', 75]], # akhari compression, mitooni baghie ro ham bezani beshe additional
             'connection_test': False,
-            'view_type': 'stream'
+            'view_type': 'stream',
+            'unlimited_recording': self._camera_essential_data['unlimited_recording']
             }
         self.startLiveStreamingGridWindow(data=ls_data)    
     def action_Histogram_Contrast_Click(self, s):
@@ -139,7 +142,8 @@ class MainView(QMainWindow):
             'user_info': self._camera_essential_data['user_info'],
             'profiles': [[2, 160, 120,'h265', 100]], # akhari compression, mitooni baghie ro ham bezani beshe additional
             'connection_test': False,
-            'view_type': 'hist'
+            'view_type': 'hist',
+            'unlimited_recording': self._camera_essential_data['unlimited_recording']
             }
         self.startLiveStreamingGridWindow(data=hc_data)
     def action_Dead_Pixels_Detector_Click(self, s):
@@ -149,7 +153,8 @@ class MainView(QMainWindow):
             'user_info': self._camera_essential_data['user_info'],
             'profiles': [[12, 640, 480,'h265', 50]], # akhari compression, mitooni baghie ro ham bezani beshe additional
             'connection_test': False,
-            'view_type': 'dead'
+            'view_type': 'dead',
+            'unlimited_recording': self._camera_essential_data['unlimited_recording']
             }
         self.startLiveStreamingGridWindow(data=ls_data)
     def action_Attach_a_Video_Click(self, s):
@@ -157,6 +162,7 @@ class MainView(QMainWindow):
     @pyqtSlot(dict)
     def on_camera_essential_data(self, data):
         self._camera_essential_data = data
+        # print(data)
 
     @pyqtSlot(list)
     def on_is_connected(self, data):
@@ -172,7 +178,8 @@ class MainView(QMainWindow):
                 'user_info': self._camera_essential_data['user_info'],
                 'profiles': [[25, 1920, 1080,'h265', 50]], # akhari compression, mitooni baghie ro ham bezani beshe additional
                 'connection_test': False,
-                'view_type': 'stream'
+                'view_type': 'stream',
+                'unlimited_recording': self._camera_essential_data['unlimited_recording']
                 }
             self.startMainWindow()
             self.startLiveStreamingGridWindow(data=ls_data)

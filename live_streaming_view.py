@@ -4,6 +4,7 @@ class LiveStreamingView(QMainWindow):
         super(LiveStreamingView, self).__init__()
         self.data = data
         self.view_type = data['view_type']
+        self.unlimited_recording = data['unlimited_recording']
         self.setupUi(self) 
     def setupUi(self, MainWindow):
         MainWindow.resize(AVAILABLE_WIDTH, (AVAILABLE_HEIGHT - AVAILABLE_HEIGHT // 10))
@@ -21,17 +22,31 @@ class LiveStreamingView(QMainWindow):
         self._ui_streaming = LiveStreamingUI()
         self._ui_bw = LiveStreamingFpsBwUI(graph_type='bw')
         self._ui_fps = LiveStreamingFpsBwUI(graph_type='fps')
+        # print(self.unlimited_recording)
         match self.view_type:
             case 'stream':
-                self._ui_streaming.setMinimumWidth(WIDTH_GRID_ITEM_VIEW_LIVE)
-                self._ui_streaming.setMinimumHeight(HEIGHT_GRID_ITEM_VIEW_LIVE - (HEIGHT_GRID_ITEM_VIEW_LIVE // 8))
-                self._ui_fps.setMinimumWidth(WIDTH_GRID_ITEM_VIEW_LIVE)
-                self._ui_fps.setMinimumHeight(HEIGHT_GRID_ITEM_VIEW_LIVE - (HEIGHT_GRID_ITEM_VIEW_LIVE // 8))
-                self._ui_bw.setMinimumWidth(WIDTH_GRID_ITEM_VIEW_LIVE)
-                self._ui_bw.setMinimumHeight(HEIGHT_GRID_ITEM_VIEW_LIVE - (HEIGHT_GRID_ITEM_VIEW_LIVE // 8))
-                self.gridLayout.addWidget(self._ui_streaming, 0, 0)
-                self.gridLayout.addWidget(self._ui_fps, 0, 1)
-                self.gridLayout.addWidget(self._ui_bw, 0, 2)
+                # ziriha hame ba ham hast va badesh unlimited recording filteresh mikone
+                # self._ui_streaming.setMinimumWidth(WIDTH_GRID_ITEM_VIEW_LIVE)
+                # self._ui_streaming.setMinimumHeight(HEIGHT_GRID_ITEM_VIEW_LIVE - (HEIGHT_GRID_ITEM_VIEW_LIVE // 8))
+                # self._ui_fps.setMinimumWidth(WIDTH_GRID_ITEM_VIEW_LIVE)
+                # self._ui_fps.setMinimumHeight(HEIGHT_GRID_ITEM_VIEW_LIVE - (HEIGHT_GRID_ITEM_VIEW_LIVE // 8))
+                # self._ui_bw.setMinimumWidth(WIDTH_GRID_ITEM_VIEW_LIVE)
+                # self._ui_bw.setMinimumHeight(HEIGHT_GRID_ITEM_VIEW_LIVE - (HEIGHT_GRID_ITEM_VIEW_LIVE // 8))
+                # self.gridLayout.addWidget(self._ui_streaming, 0, 0)
+                # self.gridLayout.addWidget(self._ui_fps, 0, 1)
+                # self.gridLayout.addWidget(self._ui_bw, 0, 2)
+                if(self.unlimited_recording == False):
+                    self._ui_fps.setMinimumWidth(WIDTH_GRID_ITEM_VIEW_LIVE)
+                    self._ui_fps.setMinimumHeight(HEIGHT_GRID_ITEM_VIEW_LIVE - (HEIGHT_GRID_ITEM_VIEW_LIVE // 8))
+                    self._ui_bw.setMinimumWidth(WIDTH_GRID_ITEM_VIEW_LIVE)
+                    self._ui_bw.setMinimumHeight(HEIGHT_GRID_ITEM_VIEW_LIVE - (HEIGHT_GRID_ITEM_VIEW_LIVE // 8))
+                    self.gridLayout.addWidget(self._ui_fps, 0, 0)
+                    self.gridLayout.addWidget(self._ui_bw, 0, 1)
+                elif (self.unlimited_recording == True):
+                    self._ui_streaming.setMinimumWidth(WIDTH_GRID_ITEM_VIEW_LIVE)
+                    self._ui_streaming.setMinimumHeight(HEIGHT_GRID_ITEM_VIEW_LIVE - (HEIGHT_GRID_ITEM_VIEW_LIVE // 8))
+                    self.gridLayout.addWidget(self._ui_streaming, 0, 0)
+
             case 'hist':
                 from live_streaming_hist_con_ui import LiveStreamingHistConUi
                 self._ui_gray_con = LiveStreamingHistConUi(hist_type='g')

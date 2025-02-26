@@ -99,8 +99,11 @@ class LoginView(QWidget):
     def unlimited_recording_state_changed(self, state):
       if state == 2:
          self._state_unlimited_recordnig = True
+        #  print("1")
       else:
          self._state_unlimited_recordnig = False
+        #  print("2")
+
 
 
     def deleteLoginLayout(self):
