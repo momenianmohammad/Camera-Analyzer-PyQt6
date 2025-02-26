@@ -116,6 +116,7 @@ class LoginView(QWidget):
         self.lineEdit_ip.setParent(None)
         self.lineEdit_user.setParent(None)
         self.lineEdit_password.setParent(None)
+        self.checkBox_unlimited_recording.setParent(None)
         self.labelMsg.deleteLater()
         self.labelIrost.deleteLater()
         self.comboBox_type.deleteLater()
@@ -124,6 +125,8 @@ class LoginView(QWidget):
         self.lineEdit_ip.deleteLater()
         self.lineEdit_user.deleteLater()
         self.lineEdit_password.deleteLater()
+        self.checkBox_unlimited_recording.deleteLater()
+
     @pyqtSlot(str)
     def on_call_camera_ip(self, value):
         self.lineEdit_ip.setText(value)
