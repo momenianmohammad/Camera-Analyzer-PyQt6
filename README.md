@@ -129,9 +129,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 For technical support and inquiries:
-- 📧 **Email:** support@ipcameraanalyzer.com
-- 📚 **Documentation:** [Wiki](https://github.com/yourusername/ip-camera-analyzer/wiki)
-- 🐛 **Issues:** [GitHub Issues](https://github.com/yourusername/ip-camera-analyzer/issues)
+- 📧 **Email:** mohammadmomenian1@gmail.com
+- 📚 **Documentation:** [Wiki](https://github.com/momenianmohammad/Camera-Analyzer-PyQt6/wiki)
+- 🐛 **Issues:** [GitHub Issues](https://github.com/momenianmohammad/Camera-Analyzer-PyQt6/issues)
 
 ---
 
